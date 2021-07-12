@@ -54,9 +54,13 @@ def main():
     images = get_images()
     similar_image_count = 0
     i=0
+    
+    # Iterate over images
     while i < len(images)-1:
         similar_images = [images[i]]
         base_hist = create_histogram(os.path.join(path,images[i]))
+
+        # Increment i until significantly different image is identified
         while i < len(images)-1:
             i+=1
             cmp_hist = create_histogram(os.path.join(path,images[i]))
@@ -65,9 +69,13 @@ def main():
                 break
             else:
                 similar_images.append(images[i])
+        
         best_image = find_focused(similar_images)
+        
         if best_image != "":
             similar_image_count+=1
+        
+        # Copy images to respective folders
         for image in similar_images:
             if image == best_image:
                 copyfile(os.path.join(path,image), os.path.join(path,"focused",image))
