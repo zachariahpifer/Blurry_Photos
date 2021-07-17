@@ -46,8 +46,15 @@ def find_focused(images):
         if laplacian > max_laplacian and laplacian > config.blur_threshold:
             max_laplacian = laplacian
             best_image = image
-    return best_image
+    return best_image 
 
+def copy_images(images, best_image):
+    # Copy most in focus image to '/focused', other images to '/blurred'
+    for image in images:
+        if image == best_image:
+            copyfile(os.path.join(path,image), os.path.join(path,"focused",image))
+        else:
+            copyfile(os.path.join(path,image), os.path.join(path,"blurred",image))
 
 def main():
     create_folders()
@@ -76,11 +83,7 @@ def main():
             similar_image_count+=1
         
         # Copy images to respective folders
-        for image in similar_images:
-            if image == best_image:
-                copyfile(os.path.join(path,image), os.path.join(path,"focused",image))
-            else:
-                copyfile(os.path.join(path,image), os.path.join(path,"blurred",image))
+        copy_images(similar_images, best_image)
 
     print("Program completed successfully. Identified ", similar_image_count, " similar images.")
 
